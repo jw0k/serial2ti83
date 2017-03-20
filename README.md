@@ -36,4 +36,4 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 * nylon M3x6mm philips screws (eBay, $1.79 for 25 pieces)
 * 3.5mm to 2.5mm stereo jack cable (eBay, $0.99)
 * some jumper cables
-* basic tools (soldering iron, philips screwdriver, dremel tool, drill, etc.)
+* basic tools (soldering iron, philips screwdriver, dremel tool, drill, files, etc.)
