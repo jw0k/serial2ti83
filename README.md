@@ -32,6 +32,9 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 ![box](images/box.jpg)
 
 * 3.5mm panel mounted stereo jack socket (eBay, $0.99)
+
+![jack socket](images/jack_socket.jpg)
+
 * nylon M3x10mm standoffs (eBay, $1.69 for 25 pieces)
 * nylon M3x6mm philips screws (eBay, $1.79 for 25 pieces)
 * 3.5mm to 2.5mm stereo jack cable (eBay, $0.99)
