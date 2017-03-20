@@ -23,5 +23,8 @@ to:
     #define SERIAL_RX_BUFFER_SIZE 256
 
 ## Putting it in a box
+Here is an example of how you can put an Arduino board inside a box and attach a 3.5 mm jack socket to the box to make a device that is convenient to use.
 
-## Transfering data between TI-83 and PC
+### List of required items
+* a plastic project box (search for "ABS Plastic Electronic Enclosure Project Box Black 103x64x40mm" on **Banggood**)
+![box](images/box.jpg)
