@@ -40,3 +40,33 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 * 3.5mm to 2.5mm stereo jack cable (eBay, $0.99)
 * some jumper cables
 * basic tools (soldering iron, philips screwdriver, dremel tool, drill, files, etc.)
+
+### Assembling the device
+
+![a01](images/a01.jpg)
+
+![a02](images/a02.jpg)
+
+![a03](images/a03.jpg)
+
+![a04](images/a04.jpg)
+
+![a05](images/a05.jpg)
+
+![a06](images/a06.jpg)
+
+![a07](images/a07.jpg)
+
+![a08](images/a08.jpg)
+
+![a09](images/a09.jpg)
+
+![a10](images/a10.jpg)
+
+![a11](images/a11.jpg)
+
+![a12](images/a12.jpg)
+
+![a13](images/a13.jpg)
+
+![a14](images/a14.jpg)
