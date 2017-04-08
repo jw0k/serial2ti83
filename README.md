@@ -31,7 +31,7 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 
 ### List of required items
 * Arduino Uno board (or clone)
-* a plastic project box (search for "ABS Plastic Electronic Enclosure Project Box Black 103x64x40mm" on **Banggood**, it's about $3.5)
+* plastic project box (search for "ABS Plastic Electronic Enclosure Project Box Black 103x64x40mm" on **Banggood**, it's about $3.5)
 
 ![box](images/b.jpg)
 
@@ -42,32 +42,55 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 * nylon M3x10mm standoffs (eBay, $1.69 for 25 pieces)
 * nylon M3x6mm philips screws (eBay, $1.79 for 25 pieces)
 * 3.5mm to 2.5mm stereo jack cable (eBay, $0.99)
+
+*Note: not every 2.5mm jack plug fits TI-83 smoothly. You may need to file away bits of plug's plastic housing so it goes all the way into the socket*
+
 * some jumper cables
 * basic tools (soldering iron, philips screwdriver, dremel tool, drill, files, etc.)
 
 ### Assembling the device
 
+The first step is to attach standoffs to the Arduino board:
+
 ![a01](images/a01.jpg)
 
+Sometimes you will need to file edges of the DC socket and connector headers to make space for screws.
+
 ![a02](images/a02.jpg)
+
+Drill 4 holes in the bottom part of the box. The holes should match Arduino's layout:
 
 ![a03](images/a03.jpg)
 
 ![a04](images/a04.jpg)
 
+Screw the Arduino board to it:
+
 ![a05](images/a05.jpg)
 
+Make a rectangular opening for the USB plug in the top part of the box. You may use a drill and finish with a file. The opening should be correctly positioned so that it matches with the USB socket.
+
 ![a06](images/a06.jpg)
+
+Drill a hole on the other side of the top part of the box and attach the 3.5mm jack socket. Solder 3 jumper cables to it.
 
 ![a07](images/a07.jpg)
 
 ![a08](images/a08.jpg)
 
+Connect the jumper cables to the Arduino (see schematic above).
+
 ![a09](images/a09.jpg)
+
+Assemble the box. Use the 4 screws included with it.
 
 ![a10](images/a10.jpg)
 
+Insall 4 rubber feet:
+
 ![a11](images/a11.jpg)
+
+This is the final result:
 
 ![a12](images/a12.jpg)
 
