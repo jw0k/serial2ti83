@@ -24,6 +24,8 @@ to:
     
 ## Schematic
 
+![schematic](images/schematic_bb.png)
+
 ## Putting it in a box
 Here is an example of how you can put an Arduino board inside a box and attach a 3.5mm jack socket to the box to make a device that is convenient to use.
 
