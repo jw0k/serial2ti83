@@ -33,7 +33,7 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 * Arduino Uno board (or clone)
 * a plastic project box (search for "ABS Plastic Electronic Enclosure Project Box Black 103x64x40mm" on **Banggood**, it's about $3.5)
 
-![box](images/box.jpg)
+![box](images/b.jpg)
 
 * 3.5mm panel mounted stereo jack socket (eBay, $0.99)
 
