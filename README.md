@@ -10,7 +10,7 @@ This program turns an Arduino Uno board into an adapter between a TI-83 graphing
 | tip           | pin 2         |
 | ring          | pin 3         | 
    
-You can now run some linking program, e.g. **TiLP** and start exchanging data (upload programs, take screenshots, dump ROM, manage variables, etc.). In case of TiLP make sure to go to File->Change Device first and choose **GrayLink** cable and TI-83 calc.
+If you use Windows, you can now run some linking program, e.g. **TiLP** and start exchanging data (upload programs, take screenshots, dump ROM, manage variables, etc.). In case of TiLP make sure to go to File->Change Device first and choose **GrayLink** cable and TI-83 calc.
 
 _Optional_: before uploading `serial2ti83.ino` it is recommended to increase the size of hardware serial buffers to make the connection more reliable. Open `HardwareSerial.h` from you Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino`) and change these 2 lines:
 
@@ -21,7 +21,34 @@ to:
 
     #define SERIAL_TX_BUFFER_SIZE 256
     #define SERIAL_RX_BUFFER_SIZE 256
-    
+
+## Patching libticables to support this link cable under linux if you use it with an board that uses ttyACM ex. Pro Micro, Digispark
+
+***This isn´t recommended but it works***
+
+First, get libticables from here: https://github.com/debrouxl/tilibs/ (git clone https://github.com/debrouxl/tilibs.git)
+Then you need to run autoreconf and configure in the libticables/trunk folder (autoreconf -i -f && ./configure)
+After that you need to patch some stuff @ libticables/trunk/src/linux
+
+1. detect.c (So that we dont error out)
+comment return ERR_TTDEV; @ if(serinfo.type == PORT_UNKNOWN || serinfo.type == PORT_MAX) out so that it doesnt return an error.
+
+2. link_gry.c
+change #define DEVNAME "ttyS" to #define DEVNAME "ttyACM" so that it uses the usb gadget serial device.
+change 
+#elif defined(__LINUX__)
+	flags = O_RDWR | O_SYNC;
+#endif
+to
+#elif defined(__LINUX__)
+	flags = O_RDWR | O_SYNC | O_NOCTTY;
+#endif
+
+And then run make and (sudo) make install.
+**IF** it doesnt get installed properly replace /usr/lib/libticables2.so.6 with the one from libticables/trunk/src/.libs/
+
+If you run everything now it should say "is usable: no" and then "is usable: yes" in the console. This means everything should work ^^
+
 ## Schematic
 
 ![schematic](images/s.png)
