@@ -1,7 +1,7 @@
 const int TIP = 2; //arduino port where the tip of the stereo jack plug is connected
 const int RING = 3; //arduino port where the middle part of the stereo jack plug is connected
-const unsigned long TXTIMEOUT = 50; //ms
-const unsigned long RXTIMEOUT = 5; //ms
+const unsigned long TXTIMEOUT = 50; //ms //change to 80 for ti83 / 82 stats
+const unsigned long RXTIMEOUT = 5; //ms //change to 10 ...
 
 void sendByte(uint8_t byte)
 {
@@ -128,6 +128,7 @@ void setup()
     digitalWrite(LED_BUILTIN, LOW);
 
     Serial.begin(9600);
+    Serial.setTimeout(10); // set serialtimeout lower for arduino w/o serial converter.
 
     //configure both lines to be in a high-impedance state and enable pull-up resistors
     pinMode(TIP, INPUT_PULLUP);
