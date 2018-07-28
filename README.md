@@ -22,7 +22,7 @@ to:
     #define SERIAL_TX_BUFFER_SIZE 256
     #define SERIAL_RX_BUFFER_SIZE 256
 
-## Patching libticables to support this under linux & boards that use ttyACM ex. Pro Micro, Digispark
+## Patching libticables to support this under linux with boards that use ttyACM ex. Pro Micro, Digispark
 
 **This isn´t recommended but it works**
 
@@ -32,11 +32,12 @@ Then you need to run **autoreconf** and **configure** in the libticables/trunk f
 
 After that you need to patch some stuff @ libticables/trunk/src/linux
 
-1. detect.c (So that we dont error out)
+1. detect.c (So that we dont become an error)
 
-	replace **return ERR_TTDEV;** with **//return ERR_TTDEV;** @ **if(serinfo.type == PORT_UNKNOWN || serinfo.type == PORT_MAX)**
+	replace **return ERR_TTDEV;** with **//return ERR_TTDEV;**  
+	somewhere in the end at **if(serinfo.type == PORT_UNKNOWN || serinfo.type == PORT_MAX)**
 	
-	Because else we become an error.
+	Because else we become an error. (type unknown?)
 
 2. link_gry.c (So we use the right tty device)
 
