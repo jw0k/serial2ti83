@@ -1,4 +1,4 @@
-# serial2ti83 / ardugraylink
+# serial2ti83 / ArduGrayLink
 A program for Arduinos that makes it possible to connect a Texas Instruments calculator to a computer
 
 ## Introduction
@@ -7,12 +7,12 @@ This program turns an Arduino board into an adapter between a TI graphing calcul
 | Jack port     | Arduino       | 
 |:-------------:|:-------------:|
 | sleeve        | GND pin       |
-| tip           | pin 2         |
-| ring          | pin 3         | 
+| tip           | Analog pin 0  |
+| ring          | Analog pin 1  |
    
 If you use Windows, you can now run some linking program, e.g. **TiLP** and start exchanging data (upload programs, take screenshots, dump ROM, manage variables, etc.). In case of TiLP make sure to go to File->Change Device first and choose **GrayLink** cable and TI-83 calc.
 
-_Optional_: before uploading `serial2ti83.ino` it is **recommended** to increase the size of hardware serial buffers to make the connection more reliable. Open `HardwareSerial.h` from you Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino`) and change these 2 lines:
+_Optional_: before uploading `serial2ti83.ino` you may wish to increase the size of hardware serial buffers to make the connection more reliable. This _might_ benefit particularly slow calculators, but after switching to direct port access, instead of digitalRead()/digitalWrite(), I no longer found this necessary (the serial buffer was never more than 32 bytes full even while transferring a several-kilobyte program to a TI-86). Open `HardwareSerial.h` from your Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino`) and change these 2 lines:
 
     #define SERIAL_TX_BUFFER_SIZE 64
     #define SERIAL_RX_BUFFER_SIZE 64
@@ -22,7 +22,7 @@ to:
     #define SERIAL_TX_BUFFER_SIZE 256
     #define SERIAL_RX_BUFFER_SIZE 256
 
-## Patching libticables to support this under linux & boards that use ttyACM ex. Pro Micro, Digispark
+## Patching libticables to support this under Linux & boards that use ttyACM ex. Pro Micro, Digispark
 
 **This isn´t recommended but it works**
 
@@ -124,7 +124,7 @@ Connect the jumper cables to the Arduino (see schematic above).
 
 ![a09](images/a09.jpg)
 
-Assemble the box. Use the 4 screws included with it.
+Assemble the box. Use the 4 screws included with it. This picture shows pins 2 and 3 in use, but now pins A0 and A1 are used.
 
 ![a10](images/a10.jpg)
 
