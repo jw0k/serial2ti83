@@ -12,7 +12,7 @@ This program turns an Arduino board into an adapter between a TI graphing calcul
    
 If you use Windows, you can now run some linking program, e.g. **TiLP** and start exchanging data (upload programs, take screenshots, dump ROM, manage variables, etc.). In case of TiLP make sure to go to File->Change Device first and choose **GrayLink** cable and TI-83 calc.
 
-_Optional_: before uploading `serial2ti83.ino` you may wish to increase the size of hardware serial buffers to make the connection more reliable. This _might_ benefit particularly slow calculators, but after switching to direct port access, instead of digitalRead()/digitalWrite(), I no longer found this necessary (the serial buffer was never more than 32 bytes full even while transferring a several-kilobyte program to a TI-86). Open `HardwareSerial.h` from your Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino`) and change these 2 lines:
+The latest revision of ArduGrayLink will turn the Arduino board's builtin LED (connected to pin 13 on the Uno) if the serial buffer fills up past 50 bytes. The LED will then remain on until the Arduino is reset. If you notice this occurring, or if you'd like to take an extra precaution, you may wish to increase the size of hardware serial buffers before uploading the sketch. This _might_ benefit particularly slow calculators, but after switching to direct port access (instead of `digitalRead()`/`digitalWrite()`) I no longer found this necessary even while transferring a several-kilobyte program to a TI-86. If you decide to make this modification, open `HardwareSerial.h` from your Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino` on Windows and `/usr/share/arduino/hardware/<distro>-arduino/avr/cores/arduino` on Linux) and change these 2 lines:
 
     #define SERIAL_TX_BUFFER_SIZE 64
     #define SERIAL_RX_BUFFER_SIZE 64
@@ -22,9 +22,9 @@ to:
     #define SERIAL_TX_BUFFER_SIZE 256
     #define SERIAL_RX_BUFFER_SIZE 256
 
-## Patching libticables to support this under Linux & boards that use ttyACM ex. Pro Micro, Digispark
+## Patching libticables to support this under Linux with boards that use ttyACM ex. Pro Micro, Digispark, Arduino Uno
 
-**This isn´t recommended but it works**
+**This isn't recommended but it works.**
 
 First, get **libticables** from here: https://github.com/debrouxl/tilibs/ (git clone https://github.com/debrouxl/tilibs.git)
 

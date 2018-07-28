@@ -245,7 +245,8 @@ void loop()
     //forward incoming data from PC to the calculator
     while (Serial.available() > 0)
     {
-        if (Serial.available() > 32) {
+        // Warn if the calculator isn't keeping up with the serial port
+        if (Serial.available() > 50) {
           digitalWrite(LED_BUILTIN, HIGH);
         }
         sendByte(Serial.read());
