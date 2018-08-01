@@ -25,18 +25,12 @@ to:
     #define SERIAL_RX_BUFFER_SIZE 256
 
 ## Patching libticables to support this under Linux with boards that use ttyACM
-=======
-
-**This isn´t recommended but it works**
-
-First, get **libticables** from here: https://github.com/debrouxl/tilibs/ (git clone https://github.com/debrouxl/tilibs.git)
 
 ### Background
 
 The original Gray Cable from Texas Instruments used a 25-pin RS-232 serial connector. At the time, most computers had built-in RS-232 serial ports as part of the motherboard. These ports were connected to UART chips that connected directly to the CPU. Since few people have serial ports nowadays though, Arduino boards include chips that provide access to serial over USB, but because there is no standard way of telling the operating system that a USB device is a serial-over-USB bridge, most Arduino boards emulate an Abstract Control Model USB modem. This means that the OS creates a serial device for the Arduino, but because the serial-over-USB bridge is technically a modem, Linux assigns it a device name starting with "ttyACM", and libticables is programmed to only use built-in serial ports.
 
 ### Patching
-=======
 
 **This isn't recommended, but it works.**
 
