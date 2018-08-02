@@ -1,4 +1,4 @@
-# serial2ti83 / ardugraylink
+# serial2ti83 / ArduGrayLink
 A program for Arduinos that makes it possible to connect a Texas Instruments calculator to a computer
 
 ## Introduction
@@ -7,12 +7,14 @@ This program turns an Arduino board into an adapter between a TI graphing calcul
 | Jack port     | Arduino       | 
 |:-------------:|:-------------:|
 | sleeve        | GND pin       |
-| tip           | pin 2         |
-| ring          | pin 3         | 
+| tip           | Analog pin 0  |
+| ring          | Analog pin 1  |
+
+**For additional reliability**, add a 10–220 μF capacitor between the RESET pin and GROUND, as shown in the schematic. This prevents the Arduino from resetting when a program opens and closes the serial port, which TI Connect and TI GRAPH-LINK do often. If the program sends data while the Arduino is rebooting, it is likely to be lost. This is absolutely essential if you want to use TI GRAPH-LINK for Windows 3.1 under DOSBox.
    
 If you use Windows, you can now run some linking program, e.g. **TiLP** and start exchanging data (upload programs, take screenshots, dump ROM, manage variables, etc.). In case of TiLP make sure to go to File->Change Device first and choose **GrayLink** cable and TI-83 calc.
 
-_Optional_: before uploading `serial2ti83.ino` it is **recommended** to increase the size of hardware serial buffers to make the connection more reliable. Open `HardwareSerial.h` from you Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino`) and change these 2 lines:
+The latest revision of ArduGrayLink will turn the Arduino board's builtin LED (connected to pin 13 on the Uno) if the serial buffer fills up past 50 bytes. The LED will then remain on until the Arduino is reset. If you notice this occurring, or if you'd like to take an extra precaution, you may wish to increase the size of hardware serial buffers before uploading the sketch. This _might_ benefit particularly slow calculators, but after switching to direct port access (instead of `digitalRead()`/`digitalWrite()`) I no longer found this necessary even while transferring a several-kilobyte program to a TI-86. If you decide to make this modification, open `HardwareSerial.h` from your Arduino installation folder (usually `C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino` on Windows and `/usr/share/arduino/hardware/<distro>-arduino/avr/cores/arduino` on Linux) and change these 2 lines:
 
     #define SERIAL_TX_BUFFER_SIZE 64
     #define SERIAL_RX_BUFFER_SIZE 64
@@ -22,52 +24,51 @@ to:
     #define SERIAL_TX_BUFFER_SIZE 256
     #define SERIAL_RX_BUFFER_SIZE 256
 
-## Patching libticables to support this under linux with boards that use ttyACM ex. Pro Micro, Digispark
+## Patching libticables to support this under Linux with boards that use ttyACM
 
-**This isn´t recommended but it works**
+### Background
 
-First, get **libticables** from here: https://github.com/debrouxl/tilibs/ (git clone https://github.com/debrouxl/tilibs.git)
+The original Gray Cable from Texas Instruments used a 25-pin RS-232 serial connector. At the time, most computers had built-in RS-232 serial ports as part of the motherboard. These ports were connected to UART chips that connected directly to the CPU. Since few people have serial ports nowadays though, Arduino boards include chips that provide access to serial over USB, but because there is no standard way of telling the operating system that a USB device is a serial-over-USB bridge, most Arduino boards emulate an Abstract Control Model USB modem. This means that the OS creates a serial device for the Arduino, but because the serial-over-USB bridge is technically a modem, Linux assigns it a device name starting with "ttyACM", and libticables is programmed to only use built-in serial ports.
 
-Then you need to run **autoreconf** and **configure** in the libticables/trunk folder (autoreconf -i -f && ./configure)
+### Patching
+
+**This isn't recommended, but it works.**
+
+First, get **libticables** from here: https://github.com/debrouxl/tilibs/ (`git clone https://github.com/debrouxl/tilibs.git`)
+
+Then you need to run **autoreconf** and **configure** in the libticables/trunk folder (`autoreconf -i -f && ./configure`)
 
 After that you need to patch some stuff @ libticables/trunk/src/linux
 
-1. detect.c (So that we dont become an error)
+1. detect.c: Comment out (using C block comments) the entire if statement block that starts with `if(serinfo.type == PORT_UNKNOWN || serinfo.type == PORT_MAX)`. As of July 31, 2018, that corresponds to lines 314 through 346.
+    
+    This allows libticables to work even though this isn't a "normal" serial port.
 
-	replace **return ERR_TTDEV;** with **//return ERR_TTDEV;**  
-	somewhere in the end at **if(serinfo.type == PORT_UNKNOWN || serinfo.type == PORT_MAX)**
-	
-	Because else we become an error. (type unknown?)
+2. link_gry.c: Change **#define DEVNAME "ttyS"** to **#define DEVNAME "ttyACM"**
 
-2. link_gry.c (So we use the right tty device)
+    This causes libticables to search for USB CDC-ACM (Communications Device Class Abstract Control Model) serial devices instead of serial ports on your computer's motherboard. Some Arduinos (perhaps those with FTDI chips?) use ttyUSB*n*, so use ttyUSB instead of ttyACM if that applies. The only difference is that ttyACM means the Arduino is pretending to be a modem and follows the Communications Device Class standard, while ttyUSB means that the serial-to-usb converter uses a vendor-specific class.
 
-	change **#define DEVNAME "ttyS"** to **#define DEVNAME "ttyACM"** (or the one of your Arduino) so that it uses the usb (gadget) serial device.
+3. Also for link_gry.c, change
+    
+        #elif defined(__LINUX__)
+            flags = O_RDWR | O_SYNC;
+        #endif
+    
+    to
+    
+        #elif defined(__LINUX__)
+            flags = O_RDWR | O_SYNC | O_NOCTTY;
+        #endif
+    
+And then run `make` and `(sudo) make install`.
 
-	also change 
+If it doesnt get installed properly replace /usr/lib/libticables2.so.6 with the one from libticables/trunk/src/.libs/
 
-		#elif defined(__LINUX__)
-			flags = O_RDWR | O_SYNC;
-		#endif
-	
-	to
-
-		#elif defined(__LINUX__)
-			flags = O_RDWR | O_SYNC | O_NOCTTY;
-		#endif
-
-And then run **make** and **(sudo) make install**
-
-**IF** it doesnt get installed properly replace /usr/lib/libticables2.so.6 with the one from libticables/trunk/src/.libs/
-
-(Sometimes the log gets spammed with ioctl errors. Unfortunatly i have no time to investigate this.)
-
-If you run everything now it should say **"is usable: no"** and then **"is usable: yes"** in the console. 
-
-This means everything should work ^^
+(Sometimes the log gets spammed with ioctl errors. Unfortunatly I have no time to investigate this.)
 
 ## Schematic
 
-![schematic](images/s.png)
+![schematic](images/s.svg)
 
 ## Putting it in a box
 Here is an example of how you can put an Arduino board inside a box and attach a 3.5mm jack socket to the box to make a device that is convenient to use.
@@ -89,6 +90,7 @@ Here is an example of how you can put an Arduino board inside a box and attach a
 *Note: not every 2.5mm jack plug fits TI-83 smoothly. You may need to file away bits of plug's plastic housing so it goes all the way into the socket*
 
 * some jumper cables
+* capacitor between 10 and 220 microfarrads.
 * basic tools (soldering iron, philips screwdriver, dremel tool, drill, files, etc.)
 
 ### Assembling the device
@@ -125,11 +127,11 @@ Connect the jumper cables to the Arduino (see schematic above).
 
 ![a09](images/a09.jpg)
 
-Assemble the box. Use the 4 screws included with it.
+Assemble the box. Use the 4 screws included with it. *Note: These instructions were created by the original author of this program and differ slightly from the most up-to-date setup. This picture shows pins 2 and 3 in use, but now pins A0 and A1 are used. This picture also does not show the capacitor.*
 
 ![a10](images/a10.jpg)
 
-Insall 4 rubber feet:
+Install 4 rubber feet:
 
 ![a11](images/a11.jpg)
 
