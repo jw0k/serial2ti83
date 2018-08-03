@@ -44,11 +44,21 @@ After that you need to patch some stuff @ libticables/trunk/src/linux
     
     This allows libticables to work even though this isn't a "normal" serial port.
 
-2. link_gry.c: Change **#define DEVNAME "ttyS"** to **#define DEVNAME "ttyACM"**
+2. detect.c: Replace 
+
+         `ticables_info(_("    is useable: yes"));`
+      
+      under the commented block of 1. with 
+      
+         `ticables_info(_("    is useable: 'yes' :) [PATCHED LIBRARY INSTALLED!]"));`
+   
+    This is useful, if you want to see if your library was installed successfully.
+
+3. link_gry.c: Change **#define DEVNAME "ttyS"** to **#define DEVNAME "ttyACM"**
 
     This causes libticables to search for USB CDC-ACM (Communications Device Class Abstract Control Model) serial devices instead of serial ports on your computer's motherboard. Some Arduinos (perhaps those with FTDI chips?) use ttyUSB*n*, so use ttyUSB instead of ttyACM if that applies. The only difference is that ttyACM means the Arduino is pretending to be a modem and follows the Communications Device Class standard, while ttyUSB means that the serial-to-usb converter uses a vendor-specific class.
 
-3. Also for link_gry.c, change
+4. Also for link_gry.c, change
     
         #elif defined(__LINUX__)
             flags = O_RDWR | O_SYNC;
@@ -62,9 +72,10 @@ After that you need to patch some stuff @ libticables/trunk/src/linux
     
 And then run `make` and `(sudo) make install`.
 
-If it doesnt get installed properly replace /usr/lib/libticables2.so.6 with the one from libticables/trunk/src/.libs/
+If it doesnt get installed properly (because of x86 os?) replace `/usr/lib/libticables2.so.x(.x.x)` and `/usr/lib/x86_64-linux-gnu/libticables2.so.x(.x.x)` with the one from `libticables/trunk/src/.libs/` 
+Be careful, dont overwrite the symlinks and rename the file to the original one from `/usr/lib...` if the numbers are different!
 
-(Sometimes the log gets spammed with ioctl errors. Unfortunatly I have no time to investigate this.)
+(Sometimes the log gets spammed with ioctl errors if the link device is too slow, just try again)
 
 ## Schematic
 
